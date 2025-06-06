@@ -18,8 +18,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
   const currentStepIndex = steps.findIndex(step => step.key === currentStep);
   
   return (
-    <div className="relative z-10 backdrop-blur-xl bg-white/60 border-b border-gray-200/30">
-      <div className="max-w-4xl mx-auto p-6">
+    <div className="relative z-10">
+      <div className="max-w-2xl mx-auto px-6 pb-6">
         <div className="flex justify-between items-center relative">
           {/* Progress line */}
           <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2"></div>

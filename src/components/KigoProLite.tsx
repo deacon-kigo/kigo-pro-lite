@@ -6,7 +6,6 @@ import { ChevronRight, CheckCircle2, AlertTriangle, ArrowLeft, Receipt, Tag, Shi
 // Components
 import { Background } from './layout/Background';
 import { Header } from './layout/Header';
-import { ProgressBar } from './layout/ProgressBar';
 import { StepContainer } from './layout/StepContainer';
 import { Button } from './ui/Button';
 
@@ -250,7 +249,7 @@ const KigoProLite = () => {
   };
 
   const renderEnterCodeStep = () => (
-    <StepContainer>
+    <StepContainer currentStep={currentStep}>
       <div className="text-center">
         <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-200/30">
           <Shield size={40} className="text-green-600" />
@@ -322,7 +321,7 @@ const KigoProLite = () => {
   );
 
   const renderConfirmRedemptionStep = () => (
-    <StepContainer>
+    <StepContainer currentStep={currentStep}>
       <div className="text-center">
         <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-200/30">
           <CheckCircle2 size={40} className="text-green-600" />
@@ -404,7 +403,7 @@ const KigoProLite = () => {
   );
 
   const renderRedemptionSuccessStep = () => (
-    <StepContainer>
+    <StepContainer currentStep={currentStep}>
       <div className="text-center">
         <div className="w-20 h-20 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-yellow-200/30">
           <Receipt size={40} className="text-yellow-600" />
@@ -436,7 +435,7 @@ const KigoProLite = () => {
   );
 
   const renderInvoiceDetailsStep = () => (
-    <StepContainer>
+    <StepContainer currentStep={currentStep}>
       <div className="text-center">
         <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-200/30">
           <Tag size={40} className="text-purple-600" />
@@ -511,7 +510,7 @@ const KigoProLite = () => {
   );
 
   const renderCompleteStep = () => (
-    <StepContainer>
+    <StepContainer currentStep={currentStep}>
       <div className="text-center">
         <div className="w-24 h-24 bg-gradient-to-br from-green-50 to-yellow-50 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-green-100/30 border border-green-200/50 animate-bounce">
           <Sparkles size={48} className="text-yellow-600" />
@@ -572,13 +571,12 @@ const KigoProLite = () => {
     <div className="min-h-screen relative overflow-hidden">
       <Background />
       
-      <div className="relative z-10 min-h-screen flex flex-col">
-        <Header dealerName={dealerName} dealerLocation={dealerLocation} />
-        <ProgressBar currentStep={currentStep} />
-        
-        <div className="flex-1 py-8">
-          {renderCurrentStep()}
+      <div className="relative z-10 min-h-screen">
+        <div className="pt-6">
+          <Header dealerName={dealerName} dealerLocation={dealerLocation} />
         </div>
+        
+        {renderCurrentStep()}
       </div>
     </div>
   );

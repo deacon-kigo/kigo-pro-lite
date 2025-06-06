@@ -1,40 +1,22 @@
 import React from 'react';
-import { DealerSupportPanel } from '../panels/DealerSupportPanel';
-import { AvailablePromotionsPanel } from '../panels/AvailablePromotionsPanel';
+import { SupportPanel } from '../panels/SupportPanel';
 
 interface StepContainerProps {
   children: React.ReactNode;
-  isTransitioning: boolean;
-  onSelectPromoCode: (code: string) => void;
 }
 
-export const StepContainer: React.FC<StepContainerProps> = ({ 
-  children, 
-  isTransitioning, 
-  onSelectPromoCode 
-}) => (
-  <div className={`transition-all duration-500 ease-out ${
-    isTransitioning ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
-  }`}>
-    <div className="max-w-7xl mx-auto p-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main form content */}
-        <div className="lg:col-span-1">
-          <div className="backdrop-blur-xl bg-white/70 rounded-3xl p-8 border border-white/50 shadow-2xl shadow-gray-200/20">
-            {children}
-          </div>
+export const StepContainer: React.FC<StepContainerProps> = ({ children }) => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 pt-4 pb-8">
+      <div className="max-w-2xl mx-auto px-6">
+        {/* Main Content Area - Centered */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl shadow-green-200/20 border border-white/50 p-8">
+          {children}
         </div>
         
-        {/* Dealer Support Panel */}
-        <div className="lg:col-span-1">
-          <DealerSupportPanel />
-        </div>
-        
-        {/* Available Promotions Panel */}
-        <div className="lg:col-span-1">
-          <AvailablePromotionsPanel onSelectPromoCode={onSelectPromoCode} />
-        </div>
+        {/* Support Panel - Bottom Placement */}
+        <SupportPanel />
       </div>
     </div>
-  </div>
-); 
+  );
+}; 

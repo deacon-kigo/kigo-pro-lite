@@ -12,7 +12,6 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
     { key: STEPS.CONFIRM_REDEMPTION, label: 'Confirm', icon: CheckCircle2 },
     { key: STEPS.REDEMPTION_SUCCESS, label: 'Instructions', icon: Receipt },
     { key: STEPS.ENTER_INVOICE_DETAILS, label: 'Details', icon: Tag },
-    { key: STEPS.FINAL_CONFIRMATION, label: 'Verify', icon: AlertTriangle },
     { key: STEPS.COMPLETE, label: 'Complete', icon: Sparkles }
   ];
   

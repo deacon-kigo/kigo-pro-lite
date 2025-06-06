@@ -24,9 +24,6 @@ export const Header: React.FC<HeaderProps> = ({ dealerName, dealerLocation }) =>
         <div className="text-right">
           <p className="text-sm font-semibold text-gray-800">Jim Smith</p>
           <p className="text-xs text-gray-600">{dealerName} {dealerLocation}</p>
-          <a href="#dealer-support" className="text-xs text-green-600 hover:text-green-700 font-medium">
-            Dealer Support & FAQ
-          </a>
         </div>
       </div>
     </div>

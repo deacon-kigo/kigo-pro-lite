@@ -15,7 +15,7 @@ import { STEPS, type StepType } from '../constants/steps';
 
 // Type definitions
 interface PromoCode {
-  status: 'ACTIVE' | 'REDEEMED' | 'PENDING';
+  status: 'ACTIVE' | 'REDEEMED' | 'PENDING' | 'EXPIRED';
   customer: string;
   firstName: string;
   lastName: string;
@@ -88,6 +88,20 @@ const mockPromoCodes: Record<string, PromoCode> = {
     discountType: 'fixed',
     item: 'Repair Services',
     partId: 'JDREPAIR50'
+  },
+  'EXPIRED123': {
+    status: 'EXPIRED',
+    customer: 'Test Customer',
+    firstName: 'Test',
+    lastName: 'Customer',
+    email: 'test@example.com',
+    mobile: '(555) 000-0000',
+    promo: '25% Off (Expired)',
+    accountNumber: '0000',
+    discount: 25,
+    discountType: 'percent',
+    item: 'Expired Promotion',
+    partId: 'EXPIRED25'
   }
 };
 
@@ -151,6 +165,12 @@ const KigoProLite = () => {
         return;
       }
       
+      if (promo.status === 'EXPIRED') {
+        setError('This promo code has expired.');
+        setIsLoading(false);
+        return;
+      }
+      
       if (promo.status === 'PENDING') {
         setError('This promo code is pending approval. Please contact John Deere Corporate for assistance.');
         setIsLoading(false);
@@ -184,12 +204,19 @@ const KigoProLite = () => {
 
   const handleInvoiceSubmit = () => {
     if (!invoiceId.trim()) {
-      setError('Please enter an invoice ID');
+      setError('Please enter invoice ID');
       return;
     }
     
     if (!discountAmount.trim()) {
-      setError('Please enter the discount amount');
+      setError('Please enter discount amount');
+      return;
+    }
+    
+    // Basic validation for discount format
+    const trimmedAmount = discountAmount.trim();
+    if (!trimmedAmount.match(/^(\$?\d+(\.\d{1,2})?|\d+%)$/)) {
+      setError('Please enter a valid discount amount (e.g., $9.40 or 20%)');
       return;
     }
     
@@ -208,6 +235,8 @@ const KigoProLite = () => {
   };
 
   const handleBack = () => {
+    setError(''); // Clear any errors when navigating back
+    
     switch (currentStep) {
       case STEPS.CONFIRM_REDEMPTION:
         setCurrentStep(STEPS.ENTER_CODE);
@@ -239,7 +268,10 @@ const KigoProLite = () => {
             ref={promoCodeRef}
             type="text"
             value={promoCode}
-            onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+            onChange={(e) => {
+              setPromoCode(e.target.value.toUpperCase());
+              if (error) setError(''); // Clear error when user starts typing
+            }}
             onKeyPress={(e) => e.key === 'Enter' && handlePromoCodeSubmit()}
             className="w-full px-4 py-3 text-lg font-mono text-gray-800 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-green-400/30 focus:border-green-500 transition-all duration-200 placeholder-gray-500"
             placeholder="e.g., 8BCFM2"
@@ -271,16 +303,18 @@ const KigoProLite = () => {
         <div className="border-t border-gray-200 pt-6">
           <p className="text-xs text-gray-500 mb-3 font-medium">Quick test codes:</p>
           <div className="grid grid-cols-2 gap-2">
-            {Object.keys(mockPromoCodes).map(code => (
-              <Button
-                key={code}
-                variant="demo"
-                onClick={() => setPromoCode(code)}
-                className="text-xs py-2"
-              >
-                {code}
-              </Button>
-            ))}
+            <Button variant="demo" onClick={() => setPromoCode('8BCFM2')} className="text-xs py-2">
+              Valid
+            </Button>
+            <Button variant="demo" onClick={() => setPromoCode('JD9012PARTS')} className="text-xs py-2">
+              Redeemed
+            </Button>
+            <Button variant="demo" onClick={() => setPromoCode('JD7890REPAIR')} className="text-xs py-2">
+              Pending
+            </Button>
+            <Button variant="demo" onClick={() => setPromoCode('EXPIRED123')} className="text-xs py-2">
+              Expired
+            </Button>
           </div>
         </div>
       </div>
@@ -294,7 +328,7 @@ const KigoProLite = () => {
           <CheckCircle2 size={40} className="text-green-600" />
         </div>
         <h2 className="text-3xl font-bold text-gray-800 mb-3">This promo code is valid</h2>
-        <p className="text-gray-600 text-lg mb-6">Please verify the customer information below and confirm redemption</p>
+        <p className="text-gray-600 text-lg mb-6">Please verify the customer information below and confirm redemption. This unique promo code can only be used once.</p>
         
         <div className="inline-flex items-center px-4 py-2 bg-red-50 border border-red-200 rounded-xl mb-8">
           <AlertTriangle size={16} className="text-red-600 mr-2" />
@@ -376,7 +410,7 @@ const KigoProLite = () => {
           <Receipt size={40} className="text-yellow-600" />
         </div>
         <h2 className="text-3xl font-bold text-gray-800 mb-3">Enter the promotion part ID</h2>
-        <p className="text-gray-600 text-lg mb-8">Use this part ID (not the promo code) when entering the promotion in your invoice system</p>
+        <p className="text-gray-600 text-lg mb-8">Use this specific part ID (not the original promo code) when applying the promotion in your dealer invoice system</p>
       </div>
 
       <div className="bg-yellow-50/60 border border-yellow-200/50 rounded-2xl p-6 mb-8">
@@ -384,9 +418,9 @@ const KigoProLite = () => {
           <span className="text-yellow-700 font-semibold text-sm">Part ID to use in invoice system:</span>
           <p className="font-mono text-3xl font-bold text-gray-800 mt-2 mb-4">{validatedPromo?.partId || 'JDPROMO'}</p>
           <div className="text-sm text-gray-600">
-            <p className="mb-2">1. Enter this Part ID in your invoice system</p>
-            <p className="mb-2">2. Apply the promotion to the appropriate items</p>
-            <p>3. Complete the invoice and proceed to the next step</p>
+            <p className="mb-2">1. Enter this Part ID in your dealer invoice system</p>
+            <p className="mb-2">2. Apply the promotion to the customer's eligible items</p>
+            <p>3. Process the invoice with the discount applied</p>
           </div>
         </div>
       </div>
@@ -420,7 +454,11 @@ const KigoProLite = () => {
             ref={invoiceIdRef}
             type="text"
             value={invoiceId}
-            onChange={(e) => setInvoiceId(e.target.value)}
+            onChange={(e) => {
+              setInvoiceId(e.target.value);
+              if (error) setError(''); // Clear error when user starts typing
+            }}
+            onKeyPress={(e) => e.key === 'Enter' && handleInvoiceSubmit()}
             className="w-full px-4 py-3 text-gray-800 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-400/30 focus:border-purple-500 transition-all duration-200 placeholder-gray-500"
             placeholder="e.g., INV-2024-001"
           />
@@ -428,12 +466,16 @@ const KigoProLite = () => {
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Enter the discount amount that resulted from applying the [{validatedPromo?.partId}] promotion
+            Enter the discount amount that resulted from applying the [{validatedPromo?.partId || 'PROMOTION_CODE'}] promotion
           </label>
           <input
             type="text"
             value={discountAmount}
-            onChange={(e) => setDiscountAmount(e.target.value)}
+            onChange={(e) => {
+              setDiscountAmount(e.target.value);
+              if (error) setError(''); // Clear error when user starts typing
+            }}
+            onKeyPress={(e) => e.key === 'Enter' && handleInvoiceSubmit()}
             className="w-full px-4 py-3 text-gray-800 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-400/30 focus:border-purple-500 transition-all duration-200 placeholder-gray-500"
             placeholder="e.g., $9.40 or 20%"
           />
@@ -499,7 +541,7 @@ const KigoProLite = () => {
         </div>
         
         <p className="text-gray-600 mb-8 text-lg font-medium">
-          The promotion has been successfully redeemed and recorded in the system.
+          The promotion has been successfully redeemed and recorded in the system. This promo code has been permanently invalidated and cannot be used again.
         </p>
         
         <Button onClick={handleStartOver} className="w-full">

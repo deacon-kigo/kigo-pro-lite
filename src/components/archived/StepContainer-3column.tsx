@@ -1,6 +1,6 @@
 import React from 'react';
 import { DealerSupportPanel } from '../panels/DealerSupportPanel';
-import { AvailablePromotionsPanel } from '../panels/AvailablePromotionsPanel';
+import { AvailablePromotionsPanel } from './AvailablePromotionsPanel';
 
 interface StepContainerProps {
   children: React.ReactNode;

@@ -1,6 +1,14 @@
 import React from 'react';
 import { Tag } from 'lucide-react';
-import { availablePromotions } from '../../data/mockData';
+
+// Mock data for archived component
+const availablePromotions = [
+  { code: 'SPRING25', name: 'Spring Service Special', description: '25% off maintenance packages', status: 'ACTIVE', expires: '2025-04-30' },
+  { code: 'FILTER20', name: 'Filter Promotion', description: '20% off all filters', status: 'ACTIVE', expires: '2025-03-31' },
+  { code: 'OIL15', name: 'Oil Change Deal', description: '15% off oil change service', status: 'ACTIVE', expires: '2025-06-15' },
+  { code: 'PARTS10', name: 'Parts Discount', description: '10% off genuine John Deere parts', status: 'EXPIRED', expires: '2025-02-28' },
+  { code: 'WINTER50', name: 'Winter Service', description: '$50 off winter preparation', status: 'EXPIRED', expires: '2025-01-31' }
+];
 
 interface AvailablePromotionsPanelProps {
   onSelectPromoCode: (code: string) => void;

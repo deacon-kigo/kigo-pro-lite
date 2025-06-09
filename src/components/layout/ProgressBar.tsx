@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight, CheckCircle2, AlertTriangle, ArrowLeft, Receipt, Tag, Shield, Sparkles } from 'lucide-react';
+import { CheckCircle2, Receipt, Tag, Shield, Sparkles } from 'lucide-react';
 import { STEPS } from '../../constants/steps';
 
 interface ProgressBarProps {

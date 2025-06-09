@@ -13,10 +13,10 @@ export const SupportPanel: React.FC = () => {
         </p>
         
         <div className="flex items-center justify-center gap-2 text-sm">
-          <Mail className="h-4 w-4 text-green-400" />
+          <Mail className="h-4 w-4 text-green-700" />
           <a 
             href="mailto:support@johndeere.com" 
-            className="text-green-400 hover:text-green-300 transition-colors"
+            className="text-green-700 hover:text-green-600 transition-colors"
           >
             support@johndeere.com
           </a>

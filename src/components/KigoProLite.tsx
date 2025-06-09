@@ -29,7 +29,7 @@ interface PromoCode {
   referenceNumber?: string;
 }
 
-// Mock data
+// Mock data for demo purposes - replace with actual API calls for production
 const mockPromoCodes: Record<string, PromoCode> = {
   '8BCFM2': { 
     status: 'ACTIVE', 
@@ -116,13 +116,33 @@ const KigoProLite = () => {
   const [discountAmount, setDiscountAmount] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [localPromoCodes, setLocalPromoCodes] = useState<Record<string, PromoCode>>({...mockPromoCodes});
+
   const [dealerName, setDealerName] = useState('Pape Machinery');
   const [dealerLocation, setDealerLocation] = useState('Kent, WA');
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [errorShake, setErrorShake] = useState(false);
   
   // Refs for auto-focus
   const promoCodeRef = useRef<HTMLInputElement>(null);
   const invoiceIdRef = useRef<HTMLInputElement>(null);
+
+  // Smooth step transition function
+  const navigateToStep = (newStep: StepType) => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentStep(newStep);
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 50);
+    }, 300);
+  };
+
+  // Set error with shake animation
+  const setErrorWithShake = (errorMessage: string) => {
+    setError(errorMessage);
+    setErrorShake(true);
+    setTimeout(() => setErrorShake(false), 500);
+  };
 
   // Auto-focus on step changes
   useEffect(() => {
@@ -132,7 +152,7 @@ const KigoProLite = () => {
       } else if (currentStep === STEPS.ENTER_INVOICE_DETAILS && invoiceIdRef.current) {
         invoiceIdRef.current.focus();
       }
-    }, 300);
+    }, 400);
     
     return () => clearTimeout(timer);
   }, [currentStep]);
@@ -145,39 +165,39 @@ const KigoProLite = () => {
       const trimmedCode = promoCode.trim();
       
       if (!trimmedCode) {
-        setError('Please enter a promo code');
+        setErrorWithShake('Please enter a promo code');
         setIsLoading(false);
         return;
       }
       
-      const promo = localPromoCodes[trimmedCode];
+      const promo = mockPromoCodes[trimmedCode];
       
       if (!promo) {
-        setError('Invalid promo code. Please check the code and try again.');
+        setErrorWithShake('Invalid promo code. Please check the code and try again.');
         setIsLoading(false);
         return;
       }
       
       if (promo.status === 'REDEEMED') {
-        setError('This promo code has already been redeemed.');
+        setErrorWithShake('This promo code has already been redeemed.');
         setIsLoading(false);
         return;
       }
       
       if (promo.status === 'EXPIRED') {
-        setError('This promo code has expired.');
+        setErrorWithShake('This promo code has expired.');
         setIsLoading(false);
         return;
       }
       
       if (promo.status === 'PENDING') {
-        setError('This promo code is pending approval. Please contact John Deere Corporate for assistance.');
+        setErrorWithShake('This promo code is pending approval. Please contact John Deere Corporate for assistance.');
         setIsLoading(false);
         return;
       }
       
       setValidatedPromo({ ...promo, code: trimmedCode });
-      setCurrentStep(STEPS.CONFIRM_REDEMPTION);
+      navigateToStep(STEPS.CONFIRM_REDEMPTION);
       setIsLoading(false);
     }, 1000);
   };
@@ -188,43 +208,44 @@ const KigoProLite = () => {
     setIsLoading(true);
     
     setTimeout(() => {
-      setLocalPromoCodes(prev => ({
-        ...prev,
-        [validatedPromo.code]: {
-          ...prev[validatedPromo.code],
-          status: 'REDEEMED' as const
-        }
-      }));
-      
-      setCurrentStep(STEPS.REDEMPTION_SUCCESS);
+      // Note: In demo mode, we don't actually mark as redeemed
+      // In production, this would update the backend
+      navigateToStep(STEPS.REDEMPTION_SUCCESS);
       setIsLoading(false);
     }, 1000);
   };
 
   const handleInvoiceSubmit = () => {
     if (!invoiceId.trim()) {
-      setError('Please enter invoice ID');
+      setErrorWithShake('Please enter invoice ID');
       return;
     }
     
     if (!discountAmount.trim()) {
-      setError('Please enter discount amount');
+      setErrorWithShake('Please enter discount amount');
       return;
     }
     
     // Basic validation for discount format
     const trimmedAmount = discountAmount.trim();
     if (!trimmedAmount.match(/^(\$?\d+(\.\d{1,2})?|\d+%)$/)) {
-      setError('Please enter a valid discount amount (e.g., $9.40 or 20%)');
+      setErrorWithShake('Please enter a valid discount amount (e.g., $9.40 or 20%)');
       return;
     }
     
     setError('');
-    setCurrentStep(STEPS.COMPLETE);
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      // Note: In demo mode, we just simulate completion
+      // In production, this would submit to backend
+      navigateToStep(STEPS.COMPLETE);
+      setIsLoading(false);
+    }, 1000);
   };
 
   const handleStartOver = () => {
-    setCurrentStep(STEPS.ENTER_CODE);
+    navigateToStep(STEPS.ENTER_CODE);
     setPromoCode('');
     setValidatedPromo(null);
     setInvoiceId('');
@@ -238,10 +259,10 @@ const KigoProLite = () => {
     
     switch (currentStep) {
       case STEPS.CONFIRM_REDEMPTION:
-        setCurrentStep(STEPS.ENTER_CODE);
+        navigateToStep(STEPS.ENTER_CODE);
         break;
       case STEPS.ENTER_INVOICE_DETAILS:
-        setCurrentStep(STEPS.REDEMPTION_SUCCESS);
+        navigateToStep(STEPS.REDEMPTION_SUCCESS);
         break;
       default:
         break;
@@ -249,7 +270,7 @@ const KigoProLite = () => {
   };
 
   const renderEnterCodeStep = () => (
-    <StepContainer currentStep={currentStep}>
+    <StepContainer currentStep={currentStep} isTransitioning={isTransitioning}>
       <div className="text-center">
         <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-200/30">
           <Shield size={40} className="text-green-600" />
@@ -278,8 +299,9 @@ const KigoProLite = () => {
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
-            <p className="text-red-700 text-sm font-medium">{error}</p>
+          <div className={`flex items-center p-4 bg-red-50 border border-red-200 rounded-xl ${errorShake ? 'animate-shake' : ''}`}>
+            <AlertTriangle size={16} className="text-red-600 mr-2 flex-shrink-0" />
+            <p className="text-red-700 text-sm font-bold">{error}</p>
           </div>
         )}
 
@@ -298,30 +320,13 @@ const KigoProLite = () => {
           )}
         </Button>
 
-        {/* Demo buttons */}
-        <div className="border-t border-gray-200 pt-6">
-          <p className="text-xs text-gray-500 mb-3 font-medium">Quick test codes:</p>
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="demo" onClick={() => setPromoCode('8BCFM2')} className="text-xs py-2">
-              Valid
-            </Button>
-            <Button variant="demo" onClick={() => setPromoCode('JD9012PARTS')} className="text-xs py-2">
-              Redeemed
-            </Button>
-            <Button variant="demo" onClick={() => setPromoCode('JD7890REPAIR')} className="text-xs py-2">
-              Pending
-            </Button>
-            <Button variant="demo" onClick={() => setPromoCode('EXPIRED123')} className="text-xs py-2">
-              Expired
-            </Button>
-          </div>
-        </div>
+
       </div>
     </StepContainer>
   );
 
   const renderConfirmRedemptionStep = () => (
-    <StepContainer currentStep={currentStep}>
+    <StepContainer currentStep={currentStep} isTransitioning={isTransitioning}>
       <div className="text-center">
         <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-200/30">
           <CheckCircle2 size={40} className="text-green-600" />
@@ -415,7 +420,7 @@ const KigoProLite = () => {
   );
 
   const renderRedemptionSuccessStep = () => (
-    <StepContainer currentStep={currentStep}>
+    <StepContainer currentStep={currentStep} isTransitioning={isTransitioning}>
       <div className="text-center">
         <div className="w-20 h-20 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-yellow-200/30">
           <Receipt size={40} className="text-yellow-600" />
@@ -437,7 +442,7 @@ const KigoProLite = () => {
       </div>
 
       <Button
-        onClick={() => setCurrentStep(STEPS.ENTER_INVOICE_DETAILS)}
+        onClick={() => navigateToStep(STEPS.ENTER_INVOICE_DETAILS)}
         className="w-full"
       >
         I've Applied the Promotion
@@ -447,7 +452,7 @@ const KigoProLite = () => {
   );
 
   const renderInvoiceDetailsStep = () => (
-    <StepContainer currentStep={currentStep}>
+    <StepContainer currentStep={currentStep} isTransitioning={isTransitioning}>
       <div className="text-center">
         <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-200/30">
           <Tag size={40} className="text-purple-600" />
@@ -493,8 +498,9 @@ const KigoProLite = () => {
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
-            <p className="text-red-700 text-sm font-medium">{error}</p>
+          <div className={`flex items-center p-4 bg-red-50 border border-red-200 rounded-xl ${errorShake ? 'animate-shake' : ''}`}>
+            <AlertTriangle size={16} className="text-red-600 mr-2 flex-shrink-0" />
+            <p className="text-red-700 text-sm font-bold">{error}</p>
           </div>
         )}
 
@@ -522,7 +528,7 @@ const KigoProLite = () => {
   );
 
   const renderCompleteStep = () => (
-    <StepContainer currentStep={currentStep}>
+    <StepContainer currentStep={currentStep} isTransitioning={isTransitioning}>
       <div className="text-center">
         <div className="w-24 h-24 bg-gradient-to-br from-green-50 to-yellow-50 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-green-100/30 border border-green-200/50 animate-bounce">
           <Sparkles size={48} className="text-yellow-600" />
@@ -538,11 +544,11 @@ const KigoProLite = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600 font-medium">Customer:</span>
-              <span className="font-semibold text-gray-800">{validatedPromo?.customer}</span>
+              <span className="font-bold text-gray-800">{validatedPromo?.customer}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600 font-medium">Invoice ID:</span>
-              <span className="font-semibold text-gray-800">{invoiceId}</span>
+              <span className="font-bold text-gray-800">{invoiceId}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600 font-medium">Discount Applied:</span>

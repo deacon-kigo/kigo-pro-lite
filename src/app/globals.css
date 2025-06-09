@@ -43,6 +43,13 @@ body {
   50% { transform: translateY(-12px) rotate(2deg); }
 }
 
+@keyframes shake {
+  0%, 50%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
 .animate-float { animation: float 8s ease-in-out infinite; }
 .animate-float-delayed { animation: float-delayed 10s ease-in-out infinite; }
 .animate-float-slow { animation: float-slow 12s ease-in-out infinite; }
+.animate-shake { animation: shake 0.5s ease-in-out; }

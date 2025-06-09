@@ -356,18 +356,6 @@ const KigoProLite = () => {
               <p className="font-bold text-gray-800">{validatedPromo?.lastName}</p>
             </div>
           </div>
-          <div className="col-span-2">
-            <span className="text-blue-700 font-semibold">Email:</span>
-            <div className="bg-white/80 rounded-xl px-3 py-2 mt-1 border border-white/50">
-              <p className="font-bold text-gray-800">{validatedPromo?.email}</p>
-            </div>
-          </div>
-          <div className="col-span-2">
-            <span className="text-blue-700 font-semibold">Mobile:</span>
-            <div className="bg-white/80 rounded-xl px-3 py-2 mt-1 border border-white/50">
-              <p className="font-bold text-gray-800">{validatedPromo?.mobile}</p>
-            </div>
-          </div>
         </div>
       </div>
 

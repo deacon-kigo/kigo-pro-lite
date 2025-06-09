@@ -226,10 +226,10 @@ const KigoProLite = () => {
       return;
     }
     
-    // Basic validation for discount format
+    // Basic validation for discount format (dollar amounts only)
     const trimmedAmount = discountAmount.trim();
-    if (!trimmedAmount.match(/^(\$?\d+(\.\d{1,2})?|\d+%)$/)) {
-      setErrorWithShake('Please enter a valid discount amount (e.g., $9.40 or 20%)');
+    if (!trimmedAmount.match(/^\d+(\.\d{1,2})?$/)) {
+      setErrorWithShake('Please enter a valid dollar amount (e.g., 9.40)');
       return;
     }
     
@@ -464,7 +464,7 @@ const KigoProLite = () => {
             }}
             onKeyPress={(e) => e.key === 'Enter' && handleInvoiceSubmit()}
             className="w-full px-4 py-3 text-gray-800 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-400/30 focus:border-purple-500 transition-all duration-200 placeholder-gray-500"
-            placeholder="e.g., INV-2024-001"
+            placeholder="Enter invoice ID"
           />
         </div>
 
@@ -472,17 +472,23 @@ const KigoProLite = () => {
           <label className="block text-sm font-semibold text-gray-700 mb-2">
             Enter the discount amount that resulted from applying the [{validatedPromo?.partId || 'PROMOTION_CODE'}] promotion
           </label>
-          <input
-            type="text"
-            value={discountAmount}
-            onChange={(e) => {
-              setDiscountAmount(e.target.value);
-              if (error) setError(''); // Clear error when user starts typing
-            }}
-            onKeyPress={(e) => e.key === 'Enter' && handleInvoiceSubmit()}
-            className="w-full px-4 py-3 text-gray-800 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-400/30 focus:border-purple-500 transition-all duration-200 placeholder-gray-500"
-            placeholder="e.g., $9.40 or 20%"
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-gray-500 text-lg font-medium">$</span>
+            </div>
+            <input
+              type="text"
+              value={discountAmount}
+              onChange={(e) => {
+                setDiscountAmount(e.target.value);
+                if (error) setError(''); // Clear error when user starts typing
+              }}
+              onKeyPress={(e) => e.key === 'Enter' && handleInvoiceSubmit()}
+              className="w-full pl-8 pr-4 py-3 text-gray-800 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-400/30 focus:border-purple-500 transition-all duration-200 placeholder-gray-500"
+              placeholder="9.40"
+            />
+          </div>
+          <p className="text-xs text-gray-500 mt-1 font-medium">Enter dollar amount only (e.g., 9.40)</p>
         </div>
 
         {error && (

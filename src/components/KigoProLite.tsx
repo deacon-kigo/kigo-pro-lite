@@ -341,19 +341,27 @@ const KigoProLite = () => {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <span className="text-blue-700 font-semibold">First Name:</span>
-            <p className="font-bold text-gray-800">{validatedPromo?.firstName}</p>
+            <div className="bg-white/80 rounded-xl px-3 py-2 mt-1 border border-white/50">
+              <p className="font-bold text-gray-800">{validatedPromo?.firstName}</p>
+            </div>
           </div>
           <div>
             <span className="text-blue-700 font-semibold">Last Name:</span>
-            <p className="font-bold text-gray-800">{validatedPromo?.lastName}</p>
+            <div className="bg-white/80 rounded-xl px-3 py-2 mt-1 border border-white/50">
+              <p className="font-bold text-gray-800">{validatedPromo?.lastName}</p>
+            </div>
           </div>
           <div className="col-span-2">
             <span className="text-blue-700 font-semibold">Email:</span>
-            <p className="font-mono text-blue-600">{validatedPromo?.email}</p>
+            <div className="bg-white/80 rounded-xl px-3 py-2 mt-1 border border-white/50">
+              <p className="font-bold text-gray-800">{validatedPromo?.email}</p>
+            </div>
           </div>
           <div className="col-span-2">
             <span className="text-blue-700 font-semibold">Mobile:</span>
-            <p className="font-mono text-blue-600">{validatedPromo?.mobile}</p>
+            <div className="bg-white/80 rounded-xl px-3 py-2 mt-1 border border-white/50">
+              <p className="font-bold text-gray-800">{validatedPromo?.mobile}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -364,11 +372,15 @@ const KigoProLite = () => {
         <div className="space-y-3 text-sm">
           <div>
             <span className="text-green-700 font-semibold">Promo Code:</span>
-            <p className="font-mono text-xl font-bold text-gray-800">{validatedPromo?.code}</p>
+            <div className="bg-white/80 rounded-xl px-3 py-2 mt-1 border border-white/50">
+              <p className="font-mono text-xl font-bold text-gray-800">{validatedPromo?.code}</p>
+            </div>
           </div>
           <div>
             <span className="text-green-700 font-semibold">Promotion:</span>
-            <p className="font-bold text-green-600 text-lg">{validatedPromo?.promo}</p>
+            <div className="bg-white/80 rounded-xl px-3 py-2 mt-1 border border-white/50">
+              <p className="font-bold text-gray-800 text-lg">{validatedPromo?.promo}</p>
+            </div>
           </div>
         </div>
       </div>

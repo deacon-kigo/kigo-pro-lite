@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({ dealerName, dealerLocation }) =>
                 priority
               />
             </div>
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white shadow-lg animate-pulse"></div>
+
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Retail Incentive Redemption Portal</h1>

@@ -14,7 +14,7 @@ import { STEPS, type StepType } from '../constants/steps';
 
 // Type definitions
 interface PromoCode {
-  status: 'ACTIVE' | 'REDEEMED' | 'PENDING' | 'EXPIRED';
+  status: 'ACTIVE' | 'REDEEMED' | 'INVALID' | 'EXPIRED';
   customer: string;
   firstName: string;
   lastName: string;
@@ -75,18 +75,18 @@ const mockPromoCodes: Record<string, PromoCode> = {
     partId: 'JDPARTS10'
   },
   'JD7890REPAIR': {
-    status: 'PENDING', 
-    customer: 'Linda Martinez',
-    firstName: 'Linda',
-    lastName: 'Martinez',
-    email: 'lmartinez@example.com',
-    mobile: '(555) 444-5678',
-    promo: '$50 Off Repair Service',
-    accountNumber: '7890',
-    discount: 50,
+    status: 'INVALID', 
+    customer: 'Invalid Code',
+    firstName: 'Invalid',
+    lastName: 'Code',
+    email: 'invalid@example.com',
+    mobile: '(000) 000-0000',
+    promo: 'Invalid Promotion',
+    accountNumber: '0000',
+    discount: 0,
     discountType: 'fixed',
-    item: 'Repair Services',
-    partId: 'JDREPAIR50'
+    item: 'N/A',
+    partId: 'INVALID'
   },
   'EXPIRED123': {
     status: 'EXPIRED',
@@ -190,8 +190,8 @@ const KigoProLite = () => {
         return;
       }
       
-      if (promo.status === 'PENDING') {
-        setErrorWithShake('This promo code is pending approval. Please contact John Deere Corporate for assistance.');
+      if (promo.status === 'INVALID') {
+        setErrorWithShake('This promo code is invalid. Please check the code and try again.');
         setIsLoading(false);
         return;
       }

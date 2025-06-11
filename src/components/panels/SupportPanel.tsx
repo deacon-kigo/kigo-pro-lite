@@ -16,7 +16,7 @@ export const SupportPanel: React.FC = () => {
           <Mail className="h-4 w-4 text-green-700" />
           <a 
             href="mailto:support@johndeere.com" 
-            className="text-green-700 hover:text-green-600 transition-colors"
+            className="text-green-700 hover:text-green-600 transition-colors underline"
           >
             support@johndeere.com
           </a>

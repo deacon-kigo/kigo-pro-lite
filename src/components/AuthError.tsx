@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shield, AlertTriangle } from 'lucide-react';
+import { Shield, AlertTriangle, LogIn } from 'lucide-react';
 import Image from 'next/image';
 
 // Components
@@ -9,6 +9,10 @@ import { Background } from './layout/Background';
 import { Button } from './ui/Button';
 
 export const AuthError: React.FC = () => {
+  const handleAuthenticate = () => {
+    // Redirect to SAML/auth endpoint
+    window.location.href = '/api/auth/signin';
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -30,7 +34,7 @@ export const AuthError: React.FC = () => {
                     priority
                   />
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-400 rounded-full border-2 border-white shadow-lg animate-pulse"></div>
+
               </div>
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-gray-800">Retail Incentive Redemption Portal</h1>
@@ -68,7 +72,19 @@ export const AuthError: React.FC = () => {
                 </div>
               </div>
 
-
+              {/* Authentication Button */}
+              <div className="text-center">
+                <Button
+                  onClick={handleAuthenticate}
+                  className="w-full"
+                >
+                  <LogIn size={20} className="mr-2" />
+                  Sign In with Dealer Credentials
+                </Button>
+                <p className="text-xs text-gray-500 mt-3">
+                  You'll be redirected to the secure John Deere authentication portal
+                </p>
+              </div>
 
             </div>
           </div>

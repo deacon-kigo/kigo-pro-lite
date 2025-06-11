@@ -38,10 +38,10 @@ This guide provides comprehensive testing scenarios for the John Deere Retail In
 - **Error Type**: Already used code
 
 #### **Test Code: `JD7890REPAIR`**
-- **Status**: PENDING
-- **Customer**: Linda Martinez
-- **Expected Result**: Error message "This promo code is pending approval. Please contact John Deere Corporate for assistance" with shake animation
-- **Error Type**: Needs approval
+- **Status**: INVALID
+- **Customer**: Invalid Code
+- **Expected Result**: Error message "This promo code is invalid. Please check the code and try again." with shake animation
+- **Error Type**: Invalid code
 
 #### **Test Code: `EXPIRED123`**
 - **Status**: EXPIRED
@@ -106,9 +106,9 @@ This guide provides comprehensive testing scenarios for the John Deere Retail In
    - Should see red error banner with shake animation
    - Can clear and try another code immediately
 
-3. **Test Pending Code**
-   - Use quick test button "Pending" or enter `JD7890REPAIR`
-   - Should see red error banner with specific corporate contact message
+3. **Test Invalid Code**
+   - Use quick test button "Invalid" or enter `JD7890REPAIR`
+   - Should see red error banner with "This promo code is invalid. Please check the code and try again."
    - Should have shake animation
 
 ### **Workflow 3: Navigation & Back Buttons**
@@ -207,12 +207,12 @@ This guide provides comprehensive testing scenarios for the John Deere Retail In
 Located at bottom of Enter Code step:
 - **"Valid"** → Sets code to `8BCFM2`
 - **"Redeemed"** → Sets code to `JD9012PARTS` 
-- **"Pending"** → Sets code to `JD7890REPAIR`
+- **"Invalid"** → Sets code to `JD7890REPAIR`
 - **"Expired"** → Sets code to `EXPIRED123`
 
 ### **Mock Data Available**
 All test codes are pre-loaded in `mockPromoCodes` constant:
-- 5 different status types (ACTIVE, REDEEMED, PENDING, EXPIRED, Invalid)
+- 5 different status types (ACTIVE, REDEEMED, INVALID, EXPIRED, Non-existent)
 - Complete customer data for each scenario
 - Realistic promotion details and part IDs
 

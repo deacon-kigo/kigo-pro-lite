@@ -41,7 +41,7 @@ export const AuthError: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="flex-1 flex items-center justify-center px-6 py-12 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
           <div className="max-w-md w-full">
             <div className="backdrop-blur-xl bg-white/70 rounded-3xl p-8 border border-white/50 shadow-2xl shadow-gray-200/20">
               
